@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tamil Movie FB Post Image Generator</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{min-height:100vh;background:linear-gradient(135deg,#0a0a0f 0%,#110820 50%,#0a0f1a 100%);font-family:'Trebuchet MS',sans-serif;color:#fff;padding:20px 16px}
+  h1{font-size:clamp(22px,4vw,36px);font-weight:900;background:linear-gradient(90deg,#fff 0%,#ffcc00 50%,#ff6b00 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;margin-bottom:4px}
+  .badge{display:inline-block;background:linear-gradient(90deg,#ff6b00,#ff0044);border-radius:8px;padding:6px 20px;font-size:11px;font-weight:800;letter-spacing:3px;color:#fff;margin-bottom:10px}
+  .header{text-align:center;margin-bottom:24px}
+  .sub{color:rgba(255,255,255,0.45);font-size:13px;margin-top:6px}
+  .main{max-width:1100px;margin:0 auto;display:flex;gap:20px;flex-wrap:wrap}
+  .panel{flex:1 1 300px;min-width:280px}
+  .preview-panel{flex:2 1 500px;min-width:300px}
+  .box{background:rgba(255,255,255,0.04);border:1px solid rgba(255,100,0,0.2);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px}
+  .tabs{display:flex;gap:8px;margin-bottom:16px}
+  .tab{flex:1;padding:8px 0;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s}
+  .tab.active{border-color:#ff6b00;background:linear-gradient(90deg,#ff6b00,#ff0044)}
+  .tab-content{display:none}.tab-content.active{display:flex;flex-direction:column;gap:14px}
+  label{display:block;color:rgba(255,180,80,0.9);font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
+  input[type=text],input[type=range]{width:100%}
+  input[type=text]{background:rgba(255,255,255,0.07);border:1px solid rgba(255,100,0,0.3);border-radius:8px;color:#fff;padding:9px 12px;font-size:14px;outline:none}
+  input[type=range]{accent-color:#ff6b00}
+  .upload-btn{width:100%;padding:10px;background:rgba(255,100,0,0.15);border:2px dashed rgba(255,100,0,0.5);border-radius:8px;color:#ffcc00;cursor:pointer;font-size:13px;font-weight:700}
+  .remove-btn{margin-top:6px;width:100%;padding:6px;background:rgba(255,0,0,0.15);border:1px solid rgba(255,0,0,0.3);border-radius:6px;color:#ff6666;cursor:pointer;font-size:12px}
+  .gradient-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .grad-btn{padding:8px 6px;border-radius:8px;border:2px solid rgba(255,255,255,0.1);color:#fff;font-size:11px;font-weight:700;cursor:pointer;transition:border-color .2s}
+  .grad-btn.active{border-color:#ff6b00!important}
+  .emoji-row{display:flex;flex-wrap:wrap;gap:6px}
+  .emoji-btn{width:38px;height:38px;border-radius:8px;border:2px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);font-size:18px;cursor:pointer;transition:all .2s}
+  .emoji-btn.active{border-color:#ff6b00;background:rgba(255,107,0,0.3)}
+  .font-btn{display:block;width:100%;margin-bottom:6px;padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#ccc;font-size:15px;cursor:pointer;text-align:left;transition:all .2s}
+  .font-btn.active{border-color:#ff6b00;background:rgba(255,107,0,0.2);color:#ffcc00}
+  .preview-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .preview-label{color:#ffcc00;font-weight:700;font-size:14px}
+  .preview-size{color:rgba(255,255,255,0.4);font-size:11px}
+  .canvas-wrap{border-radius:10px;overflow:hidden;border:2px solid rgba(255,100,0,0.3);box-shadow:0 0 40px rgba(255,100,0,0.2)}
+  canvas{width:100%;display:block}
+  .dl-btn{margin-top:16px;width:100%;padding:14px;background:linear-gradient(90deg,#ff6b00,#ff0044);border:none;border-radius:10px;color:#fff;font-size:16px;font-weight:900;cursor:pointer;letter-spacing:1px;box-shadow:0 4px 20px rgba(255,0,68,0.4);transition:transform .1s}
+  .dl-btn:active{transform:scale(0.97)}
+  .tips{margin-top:14px;padding:12px;background:rgba(255,204,0,0.06);border:1px solid rgba(255,204,0,0.15);border-radius:8px;font-size:12px;color:rgba(255,204,0,0.7);line-height:1.7}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div><span class="badge">FB POST IMAGE GENERATOR</span></div>
+  <h1>🎬 Tamil Movie Post Creator</h1>
+  <p class="sub">Create & Download Clickable Facebook Post Images</p>
+</div>
+
+<div class="main">
+  <!-- LEFT PANEL -->
+  <div class="panel">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('design',this)">🎨 Design</button>
+      <button class="tab" onclick="switchTab('text',this)">✏️ Text</button>
+      <button class="tab" onclick="switchTab('style',this)">⚙️ Style</button>
+    </div>
+
+    <div class="box">
+      <!-- DESIGN TAB -->
+      <div id="tab-design" class="tab-content active">
+        <div>
+          <label>📁 Upload Background Image</label>
+          <button class="upload-btn" onclick="document.getElementById('fileInput').click()" id="uploadLabel">Click to Upload Movie Poster / Image</button>
+          <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleUpload(event)"/>
+          <button class="remove-btn" id="removeBtn" style="display:none" onclick="removeImage()">✕ Remove Image (Use Gradient)</button>
+        </div>
+        <div id="gradSection">
+          <label>🎨 Background Gradient</label>
+          <div class="gradient-grid" id="gradGrid"></div>
+        </div>
+        <div id="overlaySection" style="display:none">
+          <label>Overlay Darkness: <span id="overlayVal">55</span>%</label>
+          <input type="range" min="10" max="90" value="55" oninput="overlayOpacity=this.value/100;document.getElementById('overlayVal').textContent=this.value;drawCanvas()"/>
+        </div>
+        <div>
+          <label>💧 Page Watermark</label>
+          <input type="text" id="watermark" value="Your Page Name" oninput="drawCanvas()"/>
+        </div>
+      </div>
+
+      <!-- TEXT TAB -->
+      <div id="tab-text" class="tab-content">
+        <div>
+          <label>🎯 Main Title</label>
+          <input type="text" id="title" value="Show Time 2026" oninput="drawCanvas()"/>
+        </div>
+        <div>
+          <label>📝 Subtitle</label>
+          <input type="text" id="subtitle" value="Full Movie In Tamil | HD Quality" oninput="drawCanvas()"/>
+        </div>
+        <div>
+          <label>📣 Tag / CTA Line</label>
+          <input type="text" id="tag" value="🔥 Now Available | Like & Share" oninput="drawCanvas()"/>
+        </div>
+        <div>
+          <label>😊 Main Emoji</label>
+          <div class="emoji-row" id="emojiRow"></div>
+        </div>
+      </div>
+
+      <!-- STYLE TAB -->
+      <div id="tab-style" class="tab-content">
+        <div>
+          <label>🔤 Font Style</label>
+          <div id="fontList"></div>
+        </div>
+        <div>
+          <label>📏 Title Font Size: <span id="sizeVal">64</span>px</label>
+          <input type="range" min="36" max="96" step="2" value="64" oninput="titleSize=+this.value;document.getElementById('sizeVal').textContent=this.value;drawCanvas()"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="preview-panel">
+    <div class="box">
+      <div class="preview-header">
+        <span class="preview-label">👁️ Live Preview</span>
+        <span class="preview-size">1200 × 630 px</span>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="canvas"></canvas>
+      </div>
+      <button class="dl-btn" onclick="downloadImage()">⬇️ Download Facebook Post Image (PNG)</button>
+      <div class="tips">💡 <strong>Tips:</strong> Upload a movie poster for best results. Add your page name as watermark. Use the Image as a Facebook post thumbnail for maximum clicks!</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const W=1200,H=630;
+const GRADIENTS=[
+  {name:"🎬 Cinema Dark",colors:["#0a0a0a","#1a0a2e","#16213e"]},
+  {name:"🔥 Fire Red",colors:["#1a0000","#3d0000","#7a0000"]},
+  {name:"💙 Ocean Blue",colors:["#000428","#004e92","#0a2a5e"]},
+  {name:"🌙 Midnight",colors:["#0f0c29","#302b63","#24243e"]},
+  {name:"🟡 Gold Rush",colors:["#0d0d0d","#2a1a00","#5a3a00"]},
+  {name:"💚 Matrix",colors:["#000000","#001a00","#003300"]},
+];
+const FONTS=["Impact","Georgia","Arial Black","Trebuchet MS","Verdana"];
+const EMOJIS=["🎬","🔥","🍿","⭐","🎭","💥","🎯","🎪","🏆","🎵"];
+
+let bgImage=null,gradient=GRADIENTS[0],selectedEmoji="🎬",selectedFont="Impact",titleSize=64,overlayOpacity=0.55;
+
+// Build gradient buttons
+const gradGrid=document.getElementById('gradGrid');
+GRADIENTS.forEach((g,i)=>{
+  const btn=document.createElement('button');
+  btn.className='grad-btn'+(i===0?' active':'');
+  btn.textContent=g.name;
+  btn.style.background=`linear-gradient(135deg,${g.colors[0]},${g.colors[1]},${g.colors[2]})`;
+  btn.onclick=()=>{gradient=g;document.querySelectorAll('.grad-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');drawCanvas();};
+  gradGrid.appendChild(btn);
+});
+
+// Build emoji buttons
+const emojiRow=document.getElementById('emojiRow');
+EMOJIS.forEach(em=>{
+  const btn=document.createElement('button');
+  btn.className='emoji-btn'+(em===selectedEmoji?' active':'');
+  btn.textContent=em;
+  btn.onclick=()=>{selectedEmoji=em;document.querySelectorAll('.emoji-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');drawCanvas();};
+  emojiRow.appendChild(btn);
+});
+
+// Build font buttons
+const fontList=document.getElementById('fontList');
+FONTS.forEach(f=>{
+  const btn=document.createElement('button');
+  btn.className='font-btn'+(f===selectedFont?' active':'');
+  btn.style.fontFamily=f;
+  btn.textContent=f;
+  btn.onclick=()=>{selectedFont=f;document.querySelectorAll('.font-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');drawCanvas();};
+  fontList.appendChild(btn);
+});
+
+function switchTab(name,el){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  el.classList.add('active');
+}
+
+function handleUpload(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    bgImage=ev.target.result;
+    document.getElementById('uploadLabel').textContent='✅ Image Uploaded — Click to Change';
+    document.getElementById('removeBtn').style.display='block';
+    document.getElementById('gradSection').style.display='none';
+    document.getElementById('overlaySection').style.display='block';
+    drawCanvas();
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeImage(){
+  bgImage=null;
+  document.getElementById('fileInput').value='';
+  document.getElementById('uploadLabel').textContent='Click to Upload Movie Poster / Image';
+  document.getElementById('removeBtn').style.display='none';
+  document.getElementById('gradSection').style.display='block';
+  document.getElementById('overlaySection').style.display='none';
+  drawCanvas();
+}
+
+function drawCanvas(){
+  const canvas=document.getElementById('canvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=W;canvas.height=H;
+
+  if(bgImage){
+    const img=new Image();
+    img.onload=()=>{
+      ctx.drawImage(img,0,0,W,H);
+      drawOverlay(ctx);drawText(ctx);drawBranding(ctx);
+    };
+    img.src=bgImage;
+  } else {
+    const g=ctx.createLinearGradient(0,0,W,H);
+    g.addColorStop(0,gradient.colors[0]);
+    g.addColorStop(0.5,gradient.colors[1]);
+    g.addColorStop(1,gradient.colors[2]);
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle='rgba(255,255,255,0.03)';ctx.lineWidth=1;
+    for(let x=0;x<W;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+    for(let y=0;y<H;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+    drawText(ctx);drawBranding(ctx);
+  }
+}
+
+function drawOverlay(ctx){
+  const g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,`rgba(0,0,0,${overlayOpacity*0.5})`);
+  g.addColorStop(0.4,`rgba(0,0,0,${overlayOpacity})`);
+  g.addColorStop(1,`rgba(0,0,0,${Math.min(overlayOpacity+0.2,1)})`);
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+}
+
+function drawText(ctx){
+  const title=document.getElementById('title').value;
+  const subtitle=document.getElementById('subtitle').value;
+  const tag=document.getElementById('tag').value;
+
+  // Top accent
+  const ag=ctx.createLinearGradient(0,0,W,0);
+  ag.addColorStop(0,'#ff6b00');ag.addColorStop(0.5,'#ff0044');ag.addColorStop(1,'#ff6b00');
+  ctx.fillStyle=ag;ctx.fillRect(0,0,W,6);
+
+  // Emoji
+  ctx.shadowColor='transparent';ctx.shadowBlur=0;
+  ctx.font=`${Math.round(titleSize*0.9)}px serif`;
+  ctx.textAlign='center';
+  ctx.fillStyle='#fff';
+  ctx.fillText(selectedEmoji,W/2,H*0.3);
+
+  // Title
+  ctx.shadowColor='rgba(255,100,0,0.8)';ctx.shadowBlur=30;
+  ctx.font=`900 ${titleSize}px ${selectedFont}`;
+  ctx.fillStyle='#ffffff';
+  ctx.textAlign='center';
+  ctx.fillText(title.toUpperCase(),W/2,H*0.48);
+
+  // Subtitle
+  ctx.shadowBlur=10;ctx.shadowColor='rgba(0,0,0,0.9)';
+  ctx.font=`bold ${Math.round(titleSize*0.42)}px ${selectedFont}`;
+  ctx.fillStyle='#ffcc00';
+  ctx.fillText(subtitle,W/2,H*0.59);
+
+  // Divider
+  ctx.shadowBlur=0;
+  ctx.fillStyle='rgba(255,100,0,0.7)';
+  ctx.fillRect(W/2-120,H*0.64,240,2);
+
+  // Tag
+  ctx.font=`${Math.round(titleSize*0.36)}px Arial`;
+  ctx.fillStyle='rgba(255,255,255,0.85)';
+  ctx.fillText(tag,W/2,H*0.72);
+  ctx.shadowBlur=0;
+}
+
+function drawBranding(ctx){
+  const wm=document.getElementById('watermark').value;
+  ctx.fillStyle='rgba(0,0,0,0.5)';
+  ctx.fillRect(W-260,H-48,250,38);
+  ctx.font='bold 18px Arial';
+  ctx.fillStyle='rgba(255,255,255,0.7)';
+  ctx.textAlign='right';
+  ctx.shadowBlur=0;
+  ctx.fillText(wm,W-18,H-22);
+  const bg=ctx.createLinearGradient(0,0,W,0);
+  bg.addColorStop(0,'#ff6b00');bg.addColorStop(0.5,'#ff0044');bg.addColorStop(1,'#ff6b00');
+  ctx.fillStyle=bg;ctx.fillRect(0,H-6,W,6);
+}
+
+function downloadImage(){
+  const canvas=document.getElementById('canvas');
+  const link=document.createElement('a');
+  link.download='fb-post-'+Date.now()+'.png';
+  link.href=canvas.toDataURL('image/png');
+  link.click();
+}
+
+// Initial draw
+drawCanvas();
+</script>
+</body>
+</html>
